@@ -16,7 +16,7 @@ app.use(express.json());
  ***   DATABASE FUNCTIONS                                         *** 
  ********************************************************************/
 // Open SQLite3 database (in read-write mode)
-let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('./stpaul_crime.sqlite3', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
         console.log('Error opening ' + path.basename(db_filename));
     }
