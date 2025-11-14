@@ -1,11 +1,16 @@
 Implement the following to earn 30/40 points (grade: C)
 
 -[x] Package.json
+
     - Fill out the author and contributors sections in package.json (author should be whoever's GitHub account is used to host the code, contributors should be all group members)
+
     - Fill out the URL of the repository
+
     - Ensure all used modules downloaded via NPM are in the dependencies object
+
     -  Ensure that the "node_modules" folder is not included on your GitHub repository
-Add the following routes for your API
+    
+-[ ]Add the following routes for your API
 GET /codes
 Return JSON array with list of codes and their corresponding incident type (ordered by code number)
 Example:
