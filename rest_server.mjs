@@ -63,17 +63,23 @@ app.get('/codes', (req, res) => {
     console.log('testing if this works');
     
     let sql = 'SELECT * FROM Codes';
-    
+
     dbSelect(sql, [])
-    .then(
-
-    )
+    .then((response) => {
+        return response.json();    
+    })
+    .then((data) => {
+        res.status(200).type('json').send(JSON.stringify(data));
+    })
+    .catch((err) => {
+        console.log(err);
+    });
    
    
-    console.log(rows);
+    //console.log(rows);
     
 
-    res.status(200).type('json').send({}); // <-- you will need to change this
+    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for neighborhoods
