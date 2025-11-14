@@ -6,10 +6,16 @@
         "name": "Anastasia Iogova",
         "email": "aiogova77@gmail.com"
     },
-    "contributors": ["Martin Miller", "Emmanuel Adekoya", "Anastasia Iogova"],
-    "repository": {"url": "https://github.com/aiogova/webdev-rest-group1"},
+    "contributors": [
+        "Martin Miller",
+        "Emmanuel Adekoya",
+        "Anastasia Iogova"
+    ],
+    "repository": {
+        "url": "https://github.com/aiogova/webdev-rest-group1"
+    },
     "dependencies": {
-        "express": "^4.18.2",
-        "sqlite3": "^5.1.6"
+        "express": "^4.21.2",
+        "sqlite3": "^5.1.7"
     }
 }
