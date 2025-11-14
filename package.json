@@ -3,12 +3,11 @@
     "description": "REST Server",
     "version": "1.0.0",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Anastasia Iogova",
+        "email": "aiogova77@gmail.com"
     },
-    "contributors": [
-    ],
-    "repository": {},
+    "contributors": ["Martin Miller", "Emmanuel Adekoya", "Anastasia Iogova"],
+    "repository": {"url": "https://github.com/aiogova/webdev-rest-group1"},
     "dependencies": {
         "express": "^4.18.2",
         "sqlite3": "^5.1.6"
