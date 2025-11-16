@@ -60,7 +60,7 @@ function dbRun(query, params) {
 app.get('/codes', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     
-    let sql = 'SELECT code, incident_type AS type FROM Codes';
+    let sql = 'SELECT code, incident_type AS type FROM Codes ORDER BY code';
 
     dbSelect(sql, [])
     .then((rows) => {
@@ -78,7 +78,7 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
-    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods';
+    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY id';
 
     dbSelect(sql, [])
     .then((rows) => {
