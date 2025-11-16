@@ -60,7 +60,7 @@ function dbRun(query, params) {
 app.get('/codes', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     
-    let sql = 'SELECT code, incident_type as type FROM Codes';
+    let sql = 'SELECT code, incident_type AS type FROM Codes';
 
     dbSelect(sql, [])
     .then((rows) => {
@@ -77,8 +77,19 @@ app.get('/codes', (req, res) => {
 // GET request handler for neighborhoods
 app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
+
+    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods';
+
+    dbSelect(sql, [])
+    .then((rows) => {
+        res.status(200).type('json').send(JSON.stringify(rows, null, 4));
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).type('txt').send('Error retrieving neighborhoods');
+    });
     
-    res.status(200).type('json').send({}); // <-- you will need to change this
+    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for crime incidents
