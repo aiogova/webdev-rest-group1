@@ -78,7 +78,7 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
-    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY id';
+    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY neighborhood_number';
 
     dbSelect(sql, [])
     .then((rows) => {
@@ -96,10 +96,12 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     
-    let sql = 'SELECT * FROM Incidents LIMIT 1000';
+    //let sql = 'SELECT * FROM Incidents LIMIT 1000';
+    let sql = 'SELECT case_number, date(date_time) AS date, time(date_time) AS time, code, incident, police_grid, neighborhood_number, block FROM Incidents ORDER BY date_time DESC LIMIT 1000';
 
     dbSelect(sql, [])
     .then((rows) => {
+
         res.status(200).type('json').send(JSON.stringify(rows, null, 4));
     })
     .catch((err) => {
