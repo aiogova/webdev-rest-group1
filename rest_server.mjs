@@ -96,7 +96,19 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     
-    res.status(200).type('json').send({}); // <-- you will need to change this
+    let sql = 'SELECT * FROM Incidents LIMIT 1000';
+
+    dbSelect(sql, [])
+    .then((rows) => {
+        res.status(200).type('json').send(JSON.stringify(rows, null, 4));
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).type('txt').send('Error retrieving incidents');
+    });
+    
+
+    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // PUT request handler for new crime incident
