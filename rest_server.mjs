@@ -102,20 +102,31 @@ app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
     let sql = '';
-    let params = [];
+    let params = []; 
+    let ids;
+
 
     // if 'id' exists as a query parameter
     if ('id' in req.query) { 
-        let id = parseInt(req.query.id);
-        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number = ? ORDER BY neighborhood_number';
-        params.push(id);
+        ids = req.query.id.split(',');
+        let placeholders = '';
+        for (let i = 0; i < ids.length; i++) {
+            ids[i] = parseInt(ids[i]);
+            if (i === ids.length - 1) {
+                placeholders += '?';
+            }
+            else {
+                placeholders += '?, ';
+            }
+        }
+        sql = `SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number IN (${ placeholders }) ORDER BY neighborhood_number`;
     }
     // if 'id' does not exist as a query parameter
     else {
         sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY neighborhood_number';
     }
 
-    dbSelect(sql, params)
+    dbSelect(sql, ids)
     .then((rows) => {
         res.status(200).type('json').send(JSON.stringify(rows, null, 4));
     })
@@ -151,7 +162,6 @@ app.get('/incidents', (req, res) => {
 // PUT request handler for new crime incident
 app.put('/new-incident', (req, res) => {
     console.log(req.body); // uploaded data
-    
     res.status(200).type('txt').send('OK'); // <-- you may need to change this
 });
 
