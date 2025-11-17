@@ -61,18 +61,20 @@ app.get('/codes', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
     let sql = '';
+    let params = [];
 
     // if 'code' exists as a query parameter
     if ('code' in req.query) { 
         let code = parseInt(req.query.code);
-        sql = 'SELECT code, incident_type AS type FROM Codes WHERE code = ' + code + ' ORDER BY code';
+        sql = 'SELECT code, incident_type AS type FROM Codes WHERE code = ? ORDER BY code';
+        params.push(code);
     }
     // if 'code' does not exist as a query parameter
     else {
         sql = 'SELECT code, incident_type AS type FROM Codes ORDER BY code';
     }
 
-    dbSelect(sql, [])
+    dbSelect(sql, params)
     .then((rows) => {
         res.status(200).type('json').send(JSON.stringify(rows, null, 4));
     })
@@ -89,18 +91,20 @@ app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
     let sql = '';
+    let params = [];
 
     // if 'id' exists as a query parameter
     if ('id' in req.query) { 
         let id = parseInt(req.query.id);
-        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number = ' + id + ' ORDER BY neighborhood_number';
+        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number = ? ORDER BY neighborhood_number';
+        params.push(id);
     }
     // if 'id' does not exist as a query parameter
     else {
         sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY neighborhood_number';
     }
 
-    dbSelect(sql, [])
+    dbSelect(sql, params)
     .then((rows) => {
         res.status(200).type('json').send(JSON.stringify(rows, null, 4));
     })
