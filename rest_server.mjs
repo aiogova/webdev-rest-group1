@@ -88,7 +88,17 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
-    let sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY neighborhood_number';
+    let sql = '';
+
+    // if 'id' exists as a query parameter
+    if ('id' in req.query) { 
+        let id = parseInt(req.query.id);
+        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number = ' + id + ' ORDER BY neighborhood_number';
+    }
+    // if 'id' does not exist as a query parameter
+    else {
+        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods ORDER BY neighborhood_number';
+    }
 
     dbSelect(sql, [])
     .then((rows) => {
