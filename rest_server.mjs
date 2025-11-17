@@ -61,8 +61,6 @@ app.get('/codes', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
     let sql = '';
-    let params = [];
-    let codesParams = '';
     let placeholders = '';
     let codes;
 
@@ -73,11 +71,9 @@ app.get('/codes', (req, res) => {
             codes[i] = parseInt(codes[i]);
             // if it's the last item of the list
             if (i === codes.length - 1) {
-                codesParams += codes[i];
                 placeholders += '?';
             }
             else {
-                codesParams += codes[i] + ', ';
                 placeholders += '?, ';
             }
         }
