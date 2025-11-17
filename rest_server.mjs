@@ -62,19 +62,34 @@ app.get('/codes', (req, res) => {
 
     let sql = '';
     let params = [];
+    let codesParams = '';
+    let placeholders = '';
+    let codes;
 
     // if 'code' exists as a query parameter
     if ('code' in req.query) { 
-        let code = parseInt(req.query.code);
-        sql = 'SELECT code, incident_type AS type FROM Codes WHERE code = ? ORDER BY code';
-        params.push(code);
+        codes = req.query.code.split(',');
+        for (let i = 0; i < codes.length; i++) {
+            codes[i] = parseInt(codes[i]);
+            // if it's the last item of the list
+            if (i === codes.length - 1) {
+                codesParams += codes[i];
+                placeholders += '?';
+            }
+            else {
+                codesParams += codes[i] + ', ';
+                placeholders += '?, ';
+            }
+        }
+
+        sql = 'SELECT code, incident_type AS type FROM Codes WHERE code IN (' + placeholders + ') ORDER BY code';
     }
     // if 'code' does not exist as a query parameter
     else {
         sql = 'SELECT code, incident_type AS type FROM Codes ORDER BY code';
     }
 
-    dbSelect(sql, params)
+    dbSelect(sql, codes)
     .then((rows) => {
         res.status(200).type('json').send(JSON.stringify(rows, null, 4));
     })
