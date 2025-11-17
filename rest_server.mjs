@@ -59,8 +59,18 @@ function dbRun(query, params) {
 // GET request handler for crime codes
 app.get('/codes', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
-    
-    let sql = 'SELECT code, incident_type AS type FROM Codes ORDER BY code';
+
+    let sql = '';
+
+    // if 'code' exists as a query parameter
+    if ('code' in req.query) { 
+        let code = parseInt(req.query.code);
+        sql = 'SELECT code, incident_type AS type FROM Codes WHERE code = ' + code + ' ORDER BY code';
+    }
+    // if 'code' does not exist as a query parameter
+    else {
+        sql = 'SELECT code, incident_type AS type FROM Codes ORDER BY code';
+    }
 
     dbSelect(sql, [])
     .then((rows) => {
