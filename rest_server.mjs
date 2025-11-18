@@ -73,6 +73,7 @@ app.get('/codes', (req, res) => {
             if (i === codes.length - 1) {
                 placeholders += '?';
             }
+            // if it's NOT the last item of the list
             else {
                 placeholders += '?, ';
             }
@@ -102,24 +103,25 @@ app.get('/neighborhoods', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
 
     let sql = '';
-    let params = []; 
+    let placeholders = '';
     let ids;
-
 
     // if 'id' exists as a query parameter
     if ('id' in req.query) { 
         ids = req.query.id.split(',');
-        let placeholders = '';
         for (let i = 0; i < ids.length; i++) {
             ids[i] = parseInt(ids[i]);
+            // if it's the last item of the list
             if (i === ids.length - 1) {
                 placeholders += '?';
             }
+            // if it's NOT the last item of the list
             else {
                 placeholders += '?, ';
             }
         }
-        sql = `SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number IN (${ placeholders }) ORDER BY neighborhood_number`;
+
+        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number IN (' + placeholders + ') ORDER BY neighborhood_number';
     }
     // if 'id' does not exist as a query parameter
     else {
