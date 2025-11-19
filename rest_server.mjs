@@ -165,19 +165,38 @@ app.get('/incidents', (req, res) => {
 app.put('/new-incident', (req, res) => {
     console.log(req.body); // uploaded data
 
-    let sql = 'INSERT INTO Incidents (case_number, date_time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    
-    let date_time = req.body.date + 'T' + req.body.time;
-    let insertParams = [req.body.case_number, date_time, req.body.code, req.body.incident, req.body.police_grid, req.body.neighborhood_number, req.body.block];
+    let code_number_already_exists = false;
 
-    dbRun(sql, insertParams)
-    .then(() => {
-        res.status(200).type('txt').send("Incident added successfully");
-    }) 
+    let sqlSelect = 'SELECT * FROM Incidents WHERE case_number = ?';
+    dbSelect(sqlSelect, [req.body.case_number])
+    .then((rows) => {
+        if (!rows.isEmpty()) {
+            code_number_already_exists = true;
+        }
+    })
     .catch((err) => {
         console.log(err);
-        res.status(500).type('txt').send("Error: could not insert incident");
     });
+
+    if (!code_number_already_exists) {
+        let sql = 'INSERT INTO Incidents (case_number, date_time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    
+        let date_time = req.body.date + 'T' + req.body.time;
+        let insertParams = [req.body.case_number, date_time, req.body.code, req.body.incident, req.body.police_grid, req.body.neighborhood_number, req.body.block];
+
+        dbRun(sql, insertParams)
+        .then(() => {
+            res.status(200).type('txt').send("Incident added successfully");
+        }) 
+        .catch((err) => {
+            console.log(err);
+            res.status(500).type('txt').send("Error: could not insert incident");
+        });
+    }
+    else {
+        res.status(500).type('txt').send("Error: could not insert incident because case number already exists in the database");
+    }
+    
     
     //res.status(200).type('txt').send('OK'); // <-- you may need to change this
 });
