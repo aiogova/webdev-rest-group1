@@ -185,8 +185,19 @@ app.put('/new-incident', (req, res) => {
 // DELETE request handler for new crime incident
 app.delete('/remove-incident', (req, res) => {
     console.log(req.body); // uploaded data
+
+    let sql = 'DELETE FROM Incidents WHERE case_number = ?';
+
+    dbRun(sql, req.body.case_number)
+    .then(() => {
+        res.status(200).type('txt').send("Incident deleted successfully");
+    }) 
+    .catch((err) => {
+        console.log(err);
+        res.status(500).type('txt').send("Error: could not delete incident");
+    });
     
-    res.status(200).type('txt').send('OK'); // <-- you may need to change this
+    //res.status(200).type('txt').send('OK'); // <-- you may need to change this
 });
 
 /********************************************************************
