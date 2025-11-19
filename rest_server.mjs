@@ -121,7 +121,7 @@ app.get('/neighborhoods', (req, res) => {
             }
         }
 
-        sql = 'SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number IN (' + placeholders + ') ORDER BY neighborhood_number';
+        sql = `SELECT neighborhood_number AS id, neighborhood_name AS name FROM Neighborhoods WHERE neighborhood_number IN (${placeholders}) ORDER BY neighborhood_number`;
     }
     // if 'id' does not exist as a query parameter
     else {
@@ -164,7 +164,22 @@ app.get('/incidents', (req, res) => {
 // PUT request handler for new crime incident
 app.put('/new-incident', (req, res) => {
     console.log(req.body); // uploaded data
-    res.status(200).type('txt').send('OK'); // <-- you may need to change this
+
+    let sql = 'INSERT INTO Incidents (case_number, date_time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    
+    let date_time = req.body.date + 'T' + req.body.time;
+    let insertParams = [req.body.case_number, date_time, req.body.code, req.body.incident, req.body.police_grid, req.body.neighborhood_number, req.body.block];
+
+    dbRun(sql, insertParams)
+    .then(() => {
+        res.status(200).type('txt').send("Incident added successfully");
+    }) 
+    .catch((err) => {
+        console.log(err);
+        res.status(500).type('txt').send("Error: could not insert incident");
+    });
+    
+    //res.status(200).type('txt').send('OK'); // <-- you may need to change this
 });
 
 // DELETE request handler for new crime incident
