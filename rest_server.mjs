@@ -95,7 +95,6 @@ app.get('/codes', (req, res) => {
         res.status(500).type('txt').send('Error retrieving codes');
     });
 
-    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for neighborhoods
@@ -137,7 +136,6 @@ app.get('/neighborhoods', (req, res) => {
         res.status(500).type('txt').send('Error retrieving neighborhoods');
     });
     
-    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for crime incidents
@@ -156,30 +154,24 @@ app.get('/incidents', (req, res) => {
         console.log(err);
         res.status(500).type('txt').send('Error retrieving incidents');
     });
-    
 
-    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // PUT request handler for new crime incident
 app.put('/new-incident', (req, res) => {
     console.log(req.body); // uploaded data
 
-    let code_number_already_exists = false;
+    let case_number_already_exists = false;
 
     let sqlSelect = 'SELECT * FROM Incidents WHERE case_number = ?';
 
     dbSelect(sqlSelect, [req.body.case_number])
     .then((rows) => {
         if (rows.length > 0) {
-            code_number_already_exists = true;
+            case_number_already_exists = true;
         }
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-    .finally(() => {
-        if (!code_number_already_exists) {
+
+        if (!case_number_already_exists) {
             let sql = 'INSERT INTO Incidents (case_number, date_time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ?, ?, ?)';
         
             let date_time = req.body.date + 'T' + req.body.time;
@@ -197,27 +189,47 @@ app.put('/new-incident', (req, res) => {
         else {
             res.status(500).type('txt').send("Error: could not insert incident because case number already exists in the database");
         }
-    });
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 
-    //res.status(200).type('txt').send('OK'); // <-- you may need to change this
 });
 
 // DELETE request handler for new crime incident
 app.delete('/remove-incident', (req, res) => {
     console.log(req.body); // uploaded data
 
-    let sql = 'DELETE FROM Incidents WHERE case_number = ?';
+    let case_number_already_exists = false;
 
-    dbRun(sql, req.body.case_number)
-    .then(() => {
-        res.status(200).type('txt').send("Incident deleted successfully");
-    }) 
+    let sqlSelect = 'SELECT * FROM Incidents WHERE case_number = ?';
+
+    dbSelect(sqlSelect, [req.body.case_number])
+    .then((rows) => {
+        if (rows.length > 0) {
+            case_number_already_exists = true;
+        }
+
+        if (case_number_already_exists) {
+            let sql = 'DELETE FROM Incidents WHERE case_number = ?';
+
+            dbRun(sql, req.body.case_number)
+            .then(() => {
+                res.status(200).type('txt').send("Incident deleted successfully");
+            }) 
+            .catch((err) => {
+                console.log(err);
+                res.status(500).type('txt').send("Error: could not delete incident");
+            });
+        }
+        else {
+            res.status(500).type('txt').send("Error: could not delete incident because case number does not exist in the database");
+        }
+    })
     .catch((err) => {
         console.log(err);
-        res.status(500).type('txt').send("Error: could not delete incident");
-    });
-    
-    //res.status(200).type('txt').send('OK'); // <-- you may need to change this
+    })
+
 });
 
 /********************************************************************
