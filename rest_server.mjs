@@ -142,8 +142,8 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     
-    let start_dates;
-    let end_dates;
+    let start_date;
+    let end_date;
     let codes;
     let grids;
     let neighborhoods;
@@ -157,58 +157,33 @@ app.get('/incidents', (req, res) => {
     // if 'start_date' exists as a query parameter
     if ('start_date' in req.query) { 
         queryParamCount++;
-        start_dates = req.query.start_date.split(',');
-        for (let i = 0; i < start_dates.length; i++) {
-            start_dates[i] = parseInt(start_dates[i]);
-            // if it's the last item of the list
-            if (i === start_dates.length - 1) {
-                placeholders += '?';
-            }
-            // if it's NOT the last item of the list
-            else {
-                placeholders += '?, ';
-            }
-        }
+        start_date = req.query.start_date;
 
         if (queryParamCount === 1) {
-            sql += ' WHERE start_date IN (' + placeholders + ')';
+            sql += ' WHERE date(date_time) >= ?';
         }
         else {
-            sql += ' AND start_date IN (' + placeholders + ')';
+            sql += ' AND date(date_time) >= ?';
         }
 
-        placeholders = '';
-        params = params.concat(start_dates);
+        params.push(start_date);
     }
 
 
     // if 'end_date' exists as a query parameter
     if ('end_date' in req.query) { 
         queryParamCount++;
-        end_dates = req.query.end_date.split(',');
-        for (let i = 0; i < end_dates.length; i++) {
-            end_dates[i] = parseInt(end_dates[i]);
-            // if it's the last item of the list
-            if (i === end_dates.length - 1) {
-                placeholders += '?';
-            }
-            // if it's NOT the last item of the list
-            else {
-                placeholders += '?, ';
-            }
-        }
+        end_date = req.query.end_date;
 
         if (queryParamCount === 1) {
-            sql += ' WHERE end_date IN (' + placeholders + ')';
+            sql += ' WHERE date(date_time) <= ?';
         }
         else {
-            sql += ' AND end_date IN (' + placeholders + ')';
+            sql += ' AND date(date_time) <= ?';
         }
 
-        placeholders = '';
-        params = params.concat(end_dates);
+        params.push(end_date);
     }
-
 
     // if 'code' exists as a query parameter
     if ('code' in req.query) { 
