@@ -273,9 +273,6 @@ app.get('/incidents', (req, res) => {
    
     sql += ' ORDER BY date_time DESC LIMIT ' + limit;
 
-    //let sql = 'SELECT * FROM Incidents LIMIT 1000';
-    // let sql = 'SELECT case_number, date(date_time) AS date, time(date_time) AS time, code, incident, police_grid, neighborhood_number, block FROM Incidents ORDER BY date_time DESC LIMIT 1000';
-
     dbSelect(sql, params)
     .then((rows) => {
 
