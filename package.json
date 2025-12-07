@@ -15,6 +15,7 @@
         "url": "https://github.com/aiogova/webdev-rest-group1"
     },
     "dependencies": {
+        "cors": "^2.8.5",
         "express": "^4.21.2",
         "sqlite3": "^5.1.7"
     }
